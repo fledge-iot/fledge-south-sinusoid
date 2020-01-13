@@ -7,7 +7,6 @@
 """ Module for Sinusoid poll mode plugin """
 
 import copy
-import uuid
 import logging
 
 from fledge.common import logger
@@ -152,7 +151,7 @@ def plugin_poll(handle):
     """
     try:
         time_stamp = utils.local_timestamp()
-        data = {'asset':  handle['assetName']['value'], 'timestamp': time_stamp, 'key': str(uuid.uuid4()), 'readings': {"sinusoid": next(generate_data())}}
+        data = {'asset':  handle['assetName']['value'], 'timestamp': time_stamp, 'readings': {"sinusoid": next(generate_data())}}
     except (Exception, RuntimeError) as ex:
         _LOGGER.exception("Sinusoid exception: {}".format(str(ex)))
         raise ex

@@ -29,7 +29,8 @@ _DEFAULT_CONFIG = {
         'description': 'Name of Asset',
         'type': 'string',
         'default': 'sinusoid',
-        'displayName': 'Asset name'
+        'displayName': 'Asset name',
+        'mandatory': 'true'
     }
 }
 

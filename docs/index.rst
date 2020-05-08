@@ -4,8 +4,8 @@
 .. |sinusoid_output| image:: images/sinusoid_output.jpg
                      
 
-Fledge Sinusoid
-===============
+Sinusoid
+========
 
 The *fledge-south-sinusoid* plugin is a south plugin that is primarily designed for testing purposes. It produces as it's output a simple sine wave, the period of which can be adjusted by changing the poll rate in the advanced settings of the south service into which it is loaded.
 

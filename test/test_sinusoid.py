@@ -29,7 +29,7 @@ def test_plugin_contract():
 def test_plugin_info():
     assert sinusoid.plugin_info() == {
         'name': 'Sinusoid Poll plugin',
-        'version': '1.8.1',
+        'version': '1.8.2',
         'mode': 'poll',
         'type': 'south',
         'interface': '1.0',

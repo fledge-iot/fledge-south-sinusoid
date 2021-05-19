@@ -152,7 +152,10 @@ def plugin_poll(handle):
     """
     try:
         time_stamp = utils.local_timestamp()
-        data = {'asset':  handle['assetName']['value'], 'timestamp': time_stamp, 'readings': {"sinusoid": next(generate_data())}}
+        r = next(generate_data())
+        if handle['assetName']['value'] == 'nested':
+            r = {'det_result': {'obj2': 1, 'obj2': 0.4, 'obj3': 'a'}, 'msg': 'OK'}
+        data = {'asset':  handle['assetName']['value'], 'timestamp': time_stamp, 'readings': {"sinusoid": r}}
     except (Exception, RuntimeError) as ex:
         _LOGGER.exception("Sinusoid exception: {}".format(str(ex)))
         raise ex

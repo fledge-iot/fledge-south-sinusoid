@@ -120,7 +120,7 @@ def plugin_info():
     return {
         'name': 'Sinusoid Poll plugin',
         'version': '1.9.2',
-        'mode': 'poll',
+        'mode': 'poll|control',
         'type': 'south',
         'interface': '1.0',
         'config': _DEFAULT_CONFIG
@@ -183,3 +183,31 @@ def plugin_shutdown(handle):
         plugin shutdown
     """
     _LOGGER.info('sinusoid plugin shut down.')
+
+def plugin_write(handle, name, value):
+    """ Setpoint write operation
+
+    Args:
+        handle: handle returned by the plugin initialisation call
+        name: Name of parameter to write
+        value: Value to be written to that parameter
+    Returns:
+        bool: Result of the write operation
+    """
+    _LOGGER.info("plugin_write(): name={}, value={}".format(name, value))
+    return True
+
+def plugin_operation(handle, operation, params):
+    """ Setpoint control operation
+
+    Args:
+        handle: handle returned by the plugin initialisation call
+        operation: Name of operation
+        params: Parameter list
+    Returns:
+        bool: Result of the operation
+    """
+    _LOGGER.info("plugin_operation(): operation={}".format(operation))
+    _LOGGER.info("plugin_operation(): type(params)={}, params={}".format(type(params), params))
+    return True
+

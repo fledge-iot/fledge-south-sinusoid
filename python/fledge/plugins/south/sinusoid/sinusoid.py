@@ -119,7 +119,7 @@ def plugin_info():
     """
     return {
         'name': 'Sinusoid Poll plugin',
-        'version': '2.1.0',
+        'version': '2.1.1',
         'mode': 'poll',
         'type': 'south',
         'interface': '1.0',

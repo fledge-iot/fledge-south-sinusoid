@@ -154,7 +154,7 @@ def plugin_poll(handle):
         time_stamp = utils.local_timestamp()
         data = {'asset':  handle['assetName']['value'], 'timestamp': time_stamp, 'readings': {"sinusoid": next(generate_data())}}
     except (Exception, RuntimeError) as ex:
-        _LOGGER.exception("Sinusoid exception: {}".format(str(ex)))
+        _LOGGER.exception(ex, "{} plugin poll failed.".format(handle['plugin']['value']))
         raise ex
     else:
         return data

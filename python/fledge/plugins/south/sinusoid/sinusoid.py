@@ -138,6 +138,12 @@ def plugin_init(config):
     data = copy.deepcopy(config)
     return data
 
+# Simulate PLC data
+time = 0
+SD_interval = 100
+SD_duration = 10
+LD_interval = 360
+LD_duration = 20
 
 def plugin_poll(handle):
     """ Extracts data from the sensor and returns it in a JSON document as a Python dict.
@@ -150,9 +156,26 @@ def plugin_poll(handle):
     Raises:
         Exception
     """
+    global time, SD_interval, SD_duration, LD_interval, LD_duration
     try:
+        if time>LD_duration and time % LD_interval >= 0 and time % LD_interval <= LD_duration:
+            ld=1
+        else:
+            ld=0
+            
+        if time>SD_duration and ld==0 and time % SD_interval >= 0 and time % SD_interval <= SD_duration:
+            sd=1
+        else:
+            sd=0
+
+        production = 1-ld
+        plc_data = {"SmallDischarge" : sd, "LargeDischarge" : ld, "Production" : production}
+
         time_stamp = utils.local_timestamp()
-        data = {'asset':  handle['assetName']['value'], 'timestamp': time_stamp, 'readings': {"sinusoid": next(generate_data())}}
+        data = {'asset':  handle['assetName']['value'], 'timestamp': time_stamp, 'readings': plc_data}
+        if sd==1 or ld==1 or time%50==0:
+            _LOGGER.warn("PLC sim: time={}: {}".format(time, data))
+        time += 1
     except (Exception, RuntimeError) as ex:
         _LOGGER.exception("Sinusoid exception: {}".format(str(ex)))
         raise ex

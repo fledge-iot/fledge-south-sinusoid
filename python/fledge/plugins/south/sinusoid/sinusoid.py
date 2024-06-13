@@ -162,9 +162,10 @@ def plugin_poll(handle):
             ld=1
         else:
             ld=0
-            
-        if time>SD_duration and ld==0 and time % SD_interval >= 0 and time % SD_interval <= SD_duration:
-            sd=1
+        
+        if time>SD_duration and time % SD_interval >= 0 and time % SD_interval <= SD_duration:
+            sd=1 
+            ld=0
         else:
             sd=0
 
@@ -181,7 +182,6 @@ def plugin_poll(handle):
         raise ex
     else:
         return data
-
 
 def plugin_reconfigure(handle, new_config):
     """ Reconfigures the plugin

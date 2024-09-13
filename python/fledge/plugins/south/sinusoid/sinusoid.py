@@ -7,6 +7,7 @@
 """ Module for Sinusoid poll mode plugin """
 
 import copy
+import random
 import logging
 
 from fledge.common import logger
@@ -140,10 +141,12 @@ def plugin_init(config):
 
 # Simulate PLC data
 time = 0
-SD_interval = 100
-SD_duration = 10
-LD_interval = 360
-LD_duration = 20
+SD_interval = 601
+SD_duration = 60
+LD_interval = 25219
+LD_duration = 60
+ld_threshold_hold_duration = 0
+ld_threshold_exceeded = None
 
 def plugin_poll(handle):
     """ Extracts data from the sensor and returns it in a JSON document as a Python dict.
@@ -156,7 +159,14 @@ def plugin_poll(handle):
     Raises:
         Exception
     """
+    global ld_threshold_exceeded, ld_threshold_hold_duration
     global time, SD_interval, SD_duration, LD_interval, LD_duration
+
+    if ld_threshold_hold_duration == 0:
+        ld_threshold_hold_duration = random.randint(5*60, 10*60)
+        ld_threshold_exceeded = random.randint(0, 1)
+        _LOGGER.info("Setting: ld_threshold_hold_duration={}, ld_threshold_exceeded={}".format(ld_threshold_hold_duration, ld_threshold_exceeded))
+
     try:
         if time>LD_duration and time % LD_interval >= 0 and time % LD_interval <= LD_duration:
             ld=1
@@ -169,7 +179,11 @@ def plugin_poll(handle):
             sd=0
 
         production = 1-ld
-        plc_data = {"SmallDischarge" : sd, "LargeDischarge" : ld, "Production" : production}
+        if not production:
+            ld_threshold_exceeded = 0
+
+        ld_threshold_hold_duration = ld_threshold_hold_duration - 1
+        plc_data = {"SmallDischarge" : sd, "LargeDischarge" : ld, "Production" : production, "LdThresholdExceeded": ld_threshold_exceeded}
 
         time_stamp = utils.local_timestamp()
         data = {'asset':  handle['assetName']['value'], 'timestamp': time_stamp, 'readings': plc_data}
@@ -206,3 +220,4 @@ def plugin_shutdown(handle):
         plugin shutdown
     """
     _LOGGER.info('sinusoid plugin shut down.')
+
